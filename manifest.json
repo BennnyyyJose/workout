@@ -1,6 +1,7 @@
 {
   "name": "Dumbbell Home Workout",
   "short_name": "DumbbellWorkout",
+  "id": "dumbbell-home-workout-app",
   "description": "4-week progressive dumbbell workout program for home fitness",
   "start_url": "./index.html",
   "display": "standalone",
@@ -8,18 +9,49 @@
   "theme_color": "#667eea",
   "orientation": "portrait",
   "categories": ["health", "fitness", "sports"],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
   "icons": [
     {
       "src": "icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192", 
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512x512.png", 
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png", 
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "320x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile view of workout dashboard"
+    },
+    {
+      "src": "screenshot-workout.png", 
+      "sizes": "320x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Exercise tracking interface"
     }
   ]
 }
