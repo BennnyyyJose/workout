@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="4-week progressive dumbbell workout program for home fitness">
+    <title>Dumbbell Home Workout</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .week-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .week-btn {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .week-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .workout-card {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .day-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .exercise {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .exercise-image {
+            width: 60px;
+            height: 60px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 12px;
+            color: #718096;
+            text-align: center;
+        }
+
+        .exercise-info {
+            flex: 1;
+        }
+
+        .exercise-name {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .exercise-details {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .timer-section {
+            background: #fed7d7;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e53e3e;
+            margin: 10px 0;
+        }
+
+        .timer-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .timer-btn:hover {
+            background: #c53030;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .complete-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 25px;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .complete-btn:hover {
+            background: #38a169;
+        }
+
+        .weight-calc {
+            background: #bee3f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .current-exercise {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+        }
+
+        .completed {
+            background: #f0f8f0;
+            opacity: 0.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .weight-input {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .weight-input input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .intensity-badge {
+            background: #ffd93d;
+            color: #2d3748;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .intensity-medium {
+            background: #ff9500;
+            color: white;
+        }
+
+        .intensity-hard {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .rest-day {
+            background: #e6fffa;
+            border-left-color: #48bb78;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 Dumbbell Home Workout</h1>
+            <p id="weekTitle">4-Week Progressive Program</p>
+        </div>
+
+        <div class="nav-buttons" style="text-align: center; margin-bottom: 20px;">
+            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="showPage('workout')">Workout</button>
+            <button class="nav-btn" onclick="showPage('progress')">Progress</button>
+            <button class="nav-btn" onclick="showPage('tracking')">Tracking</button>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="week-selector">
+                <button class="week-btn active" onclick="selectWeek(1)">Week 1</button>
+                <button class="week-btn" onclick="selectWeek(2)">Week 2</button>
+                <button class="week-btn" onclick="selectWeek(3)">Week 3</button>
+                <button class="week-btn" onclick="selectWeek(4)">Week 4</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="workoutsCompleted">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWorkouts">0</div>
+                    <div class="stat-label">Total Done</div>
+                </div>
+            </div>
+
+            <div id="weekWorkouts">
+                <!-- Week workouts will be populated here -->
+            </div>
+        </div>
+
+        <!-- Workout Page -->
+        <div id="workout" class="page">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 id="workoutTitle">Select a workout from Dashboard</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="workoutProgress" style="width: 0%"></div>
+                </div>
+                <p id="exerciseCounter">Exercise 0 of 0</p>
+            </div>
+
+            <div id="currentExercise" class="exercise current-exercise" style="display: none;">
+                <div class="exercise-image" id="exerciseImage">IMG</div>
+                <div class="exercise-info">
+                    <div class="exercise-name" id="exerciseName"></div>
+                    <div class="exercise-details" id="exerciseDetails"></div>
+                </div>
+            </div>
+
+            <div class="weight-calc" id="weightCalc"></div>
+
+            <div class="timer-section">
+                <div>Rest Timer</div>
+                <div class="timer-display" id="timerDisplay">0:00</div>
+                <button class="timer-btn" onclick="startTimer()" id="timerBtn">Start Rest</button>
+                <button class="timer-btn" onclick="resetTimer()">Reset</button>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="nav-btn" onclick="previousExercise()">← Previous</button>
+                <button class="nav-btn" onclick="nextExercise()">Next →</button>
+                <button class="complete-btn" onclick="completeExercise()" style="margin-top: 15px;">Complete Exercise</button>
+            </div>
+        </div>
+
+        <!-- Progress Page -->
+        <div id="progress" class="page">
+            <h2 style="text-align: center; margin-bottom: 20px;">Your Progress</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWorkoutsCompleted">0</div>
+                    <div class="stat-label">Total Workouts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="day-title">Weekly Progress</div>
+                <div id="weeklyProgress"></div>
+            </div>
+
+            <div class="workout-card">
+                <div class="day-title">Strength Progression</div>
+                <div id="strengthProgress">
+                    <p>Complete workouts to see strength gains!</p>
+                </div>
+            </div>
+
+            <button class="nav-btn" onclick="resetProgress()" style="background: #e53e3e;">Reset All Progress</button>
+        </div>
+
+        <!-- Tracking Page -->
+        <div id="tracking" class="page">
+            <h2 style="text-align: center; margin-bottom: 20px;">Body Tracking</h2>
+            
+            <div class="weight-input">
+                <h3>⚖️ Daily Weight</h3>
+                <input type="number" id="weightInput" placeholder="kg" step="0.1">
+                <button class="nav-btn" onclick="saveWeight()">Save</button>
+            </div>
+
+            <div class="workout-card">
+                <div class="day-title">Weight History</div>
+                <div id="weightHistory">
+                    <p>Start tracking your weight to see progress!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive workout data for 4 weeks
+        const workoutProgram = {
+            1: {
+                title: "Week 1 - Foundation Building",
+                description: "Focus on form and building the habit",
+                workouts: {
+                    monday: {
+                        title: "Full Body A",
+                        intensity: "easy",
+                        duration: "25 min",
+                        exercises: [
+                            {name: "Dumbbell Squats", sets: 3, reps: 12, weight: "4kg (2+2)", rest: 60, muscle: "legs"},
+                            {name: "Push-ups", sets: 3, reps: "8-12", weight: "Bodyweight", rest: 60, muscle: "chest"},
+                            {name: "Dumbbell Rows (Single Arm)", sets: 3, reps: "10 each", weight: "4kg", rest: 45, muscle: "back"},
+                            {name: "Dumbbell Shoulder Press", sets: 3, reps: 10, weight: "4kg", rest: 60, muscle: "shoulders"},
+                            {name: "Plank Hold", sets: 3, reps: "20-30 sec", weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    tuesday: {
+                        title: "Active Recovery",
+                        intensity: "easy",
+                        duration: "15 min",
+                        exercises: [
+                            {name: "Cat-Cow Stretches", sets: 1, reps: 10, weight: "Bodyweight", rest: 30, muscle: "mobility"},
+                            {name: "Hip Circles", sets: 1, reps: "10 each direction", weight: "Bodyweight", rest: 30, muscle: "mobility"},
+                            {name: "Shoulder Rolls", sets: 1, reps: "10 forward/back", weight: "Bodyweight", rest: 30, muscle: "mobility"},
+                            {name: "Light Walking", sets: 1, reps: "5-10 min", weight: "Optional", rest: 0, muscle: "cardio"}
+                        ]
+                    },
+                    wednesday: {
+                        title: "Full Body B",
+                        intensity: "easy",
+                        duration: "25 min",
+                        exercises: [
+                            {name: "Dumbbell Deadlifts", sets: 3, reps: 10, weight: "6kg (3+3)", rest: 60, muscle: "legs"},
+                            {name: "Incline Push-ups", sets: 3, reps: "10-15", weight: "Bodyweight", rest: 60, muscle: "chest"},
+                            {name: "Dumbbell Chest Press", sets: 3, reps: 12, weight: "4kg", rest: 60, muscle: "chest"},
+                            {name: "Dumbbell Lunges", sets: 3, reps: "8 each leg", weight: "4kg", rest: 60, muscle: "legs"},
+                            {name: "Mountain Climbers", sets: 3, reps: "20 total", weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    thursday: {
+                        title: "Active Recovery",
+                        intensity: "easy",
+                        duration: "15 min",
+                        exercises: [
+                            {name: "Easy Planks", sets: 2, reps: "15-20 sec", weight: "Bodyweight", rest: 30, muscle: "core"},
+                            {name: "Single-leg Stands", sets: 2, reps: "30 sec each", weight: "Bodyweight", rest: 30, muscle: "balance"},
+                            {name: "Glute Bridges", sets: 2, reps: 10, weight: "Bodyweight", rest: 30, muscle: "glutes"},
+                            {name: "Deep Breathing", sets: 1, reps: "5 min", weight: "Relaxation", rest: 0, muscle: "recovery"}
+                        ]
+                    },
+                    friday: {
+                        title: "Full Body C",
+                        intensity: "easy",
+                        duration: "25 min",
+                        exercises: [
+                            {name: "Goblet Squats", sets: 3, reps: 12, weight: "6kg (hold one)", rest: 60, muscle: "legs"},
+                            {name: "Standard Push-ups", sets: 3, reps: "6-10", weight: "Bodyweight", rest: 60, muscle: "chest"},
+                            {name: "Dumbbell Bent-over Rows", sets: 3, reps: 12, weight: "4kg", rest: 60, muscle: "back"},
+                            {name: "Dumbbell Overhead Press", sets: 3, reps: 8, weight: "4kg", rest: 60, muscle: "shoulders"},
+                            {name: "Dead Bug", sets: 3, reps: "8 each side", weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    saturday: {
+                        title: "Light Session",
+                        intensity: "easy",
+                        duration: "15 min",
+                        exercises: [
+                            {name: "Bodyweight Squats", sets: 2, reps: 15, weight: "Bodyweight", rest: 30, muscle: "legs"},
+                            {name: "Wall Push-ups", sets: 2, reps: 12, weight: "Bodyweight", rest: 30, muscle: "chest"},
+                            {name: "Standing Calf Raises", sets: 2, reps: 15, weight: "Bodyweight", rest: 30, muscle: "calves"},
+                            {name: "Side Steps", sets: 2, reps: "10 each direction", weight: "Bodyweight", rest: 30, muscle: "legs"},
+                            {name: "Standing Marches", sets: 2, reps: "20 total", weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    sunday: { title: "Rest Day", type: "rest" }
+                }
+            },
+            2: {
+                title: "Week 2 - Building Strength",
+                description: "Increased intensity and new exercises",
+                workouts: {
+                    monday: {
+                        title: "Upper Body Focus",
+                        intensity: "medium",
+                        duration: "30 min",
+                        exercises: [
+                            {name: "Dumbbell Chest Press", sets: 4, reps: 10, weight: "6kg (3+3)", rest: 60, muscle: "chest"},
+                            {name: "Dumbbell Rows", sets: 4, reps: 12, weight: "6kg", rest: 60, muscle: "back"},
+                            {name: "Push-ups", sets: 3, reps: "10-15", weight: "Bodyweight", rest: 45, muscle: "chest"},
+                            {name: "Dumbbell Shoulder Press", sets: 3, reps: 12, weight: "4kg", rest: 60, muscle: "shoulders"},
+                            {name: "Dumbbell Bicep Curls", sets: 3, reps: 15, weight: "4kg", rest: 45, muscle: "biceps"},
+                            {name: "Crunches", sets: 3, reps: 20, weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    tuesday: {
+                        title: "Lower Body + Core",
+                        intensity: "medium",
+                        duration: "30 min",
+                        exercises: [
+                            {name: "Goblet Squats", sets: 4, reps: 15, weight: "8kg (4+4)", rest: 60, muscle: "legs"},
+                            {name: "Dumbbell Lunges", sets: 3, reps: "12 each leg", weight: "6kg", rest: 60, muscle: "legs"},
+                            {name: "Dumbbell Deadlifts", sets: 4, reps: 12, weight: "8kg", rest: 60, muscle: "legs"},
+                            {name: "Calf Raises", sets: 3, reps: 20, weight: "6kg", rest: 45, muscle: "calves"},
+                            {name: "Bicycle Crunches", sets: 3, reps: "20 each side", weight: "Bodyweight", rest: 30, muscle: "core"},
+                            {name: "Plank Hold", sets: 3, reps: "30-45 sec", weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    wednesday: {
+                        title: "Full Body Circuit",
+                        intensity: "medium",
+                        duration: "35 min",
+                        exercises: [
+                            {name: "Squat to Press", sets: 3, reps: 12, weight: "6kg", rest: 60, muscle: "full body"},
+                            {name: "Dumbbell Thrusters", sets: 3, reps: 10, weight: "6kg", rest: 60, muscle: "full body"},
+                            {name: "Renegade Rows", sets: 3, reps: "8 each arm", weight: "4kg", rest: 60, muscle: "full body"},
+                            {name: "Dumbbell Swings", sets: 3, reps: 15, weight: "8kg (hold one)", rest: 45, muscle: "full body"},
+                            {name: "Burpees", sets: 3, reps: 8, weight: "Bodyweight", rest: 60, muscle: "cardio"},
+                            {name: "Russian Twists", sets: 3, reps: 25, weight: "4kg", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    thursday: {
+                        title: "Upper Body + Cardio",
+                        intensity: "medium",
+                        duration: "30 min",
+                        exercises: [
+                            {name: "Dumbbell Bench Press", sets: 4, reps: 8, weight: "8kg", rest: 60, muscle: "chest"},
+                            {name: "Bent-over Rows", sets: 4, reps: 10, weight: "8kg", rest: 60, muscle: "back"},
+                            {name: "Pike Push-ups", sets: 3, reps: 8, weight: "Bodyweight", rest: 45, muscle: "shoulders"},
+                            {name: "High Knees", sets: 3, reps: "30 sec", weight: "Bodyweight", rest: 30, muscle: "cardio"},
+                            {name: "Jumping Jacks", sets: 3, reps: "30 sec", weight: "Bodyweight", rest: 30, muscle: "cardio"},
+                            {name: "Leg Raises", sets: 3, reps: 15, weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    friday: {
+                        title: "Lower Body + Strength",
+                        intensity: "medium",
+                        duration: "30 min",
+                        exercises: [
+                            {name: "Dumbbell Squats", sets: 4, reps: 10, weight: "10kg (5+5)", rest: 60, muscle: "legs"},
+                            {name: "Single-leg Deadlifts", sets: 3, reps: "8 each leg", weight: "6kg", rest: 60, muscle: "legs"},
+                            {name: "Bulgarian Split Squats", sets: 3, reps: "10 each leg", weight: "4kg", rest: 60, muscle: "legs"},
+                            {name: "Glute Bridges", sets: 3, reps: 20, weight: "8kg", rest: 45, muscle: "glutes"},
+                            {name: "Wall Sit", sets: 3, reps: "45 sec", weight: "Bodyweight", rest: 60, muscle: "legs"},
+                            {name: "Dead Bug", sets: 3, reps: "12 each side", weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    saturday: {
+                        title: "Core + Flexibility",
+                        intensity: "easy",
+                        duration: "20 min",
+                        exercises: [
+                            {name: "Crunches", sets: 3, reps: 25, weight: "Bodyweight", rest: 30, muscle: "core"},
+                            {name: "Reverse Crunches", sets: 3, reps: 15, weight: "Bodyweight", rest: 30, muscle: "core"},
+                            {name: "Side Planks", sets: 2, reps: "20 sec each", weight: "Bodyweight", rest: 30, muscle: "core"},
+                            {name: "Cat-Cow Stretches", sets: 2, reps: 15, weight: "Bodyweight", rest: 30, muscle: "mobility"},
+                            {name: "Hip Flexor Stretch", sets: 2, reps: "30 sec each", weight: "Bodyweight", rest: 30, muscle: "mobility"}
+                        ]
+                    },
+                    sunday: { title: "Rest Day", type: "rest" }
+                }
+            },
+            3: {
+                title: "Week 3 - Progressive Overload",
+                description: "Heavier weights and advanced movements",
+                workouts: {
+                    monday: {
+                        title: "Upper Power",
+                        intensity: "hard",
+                        duration: "35 min",
+                        exercises: [
+                            {name: "Dumbbell Chest Press", sets: 4, reps: 8, weight: "8kg (4+4)", rest: 75, muscle: "chest"},
+                            {name: "Dumbbell Rows", sets: 4, reps: 10, weight: "8kg", rest: 75, muscle: "back"},
+                            {name: "Diamond Push-ups", sets: 3, reps: 8, weight: "Bodyweight", rest: 60, muscle: "triceps"},
+                            {name: "Lateral Raises", sets: 4, reps: 12, weight: "4kg", rest: 45, muscle: "shoulders"},
+                            {name: "Hammer Curls", sets: 3, reps: 12, weight: "6kg", rest: 45, muscle: "biceps"},
+                            {name: "Weighted Crunches", sets: 3, reps: 20, weight: "6kg", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    tuesday: {
+                        title: "Lower Power",
+                        intensity: "hard",
+                        duration: "35 min",
+                        exercises: [
+                            {name: "Goblet Squats", sets: 4, reps: 12, weight: "10kg (5+5)", rest: 75, muscle: "legs"},
+                            {name: "Dumbbell Deadlifts", sets: 4, reps: 10, weight: "10kg", rest: 75, muscle: "legs"},
+                            {name: "Walking Lunges", sets: 3, reps: "15 each leg", weight: "6kg", rest: 60, muscle: "legs"},
+                            {name: "Jump Squats", sets: 3, reps: 12, weight: "Bodyweight", rest: 60, muscle: "power"},
+                            {name: "Single-leg Calf Raises", sets: 3, reps: "15 each", weight: "6kg", rest: 45, muscle: "calves"},
+                            {name: "V-ups", sets: 3, reps: 15, weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    wednesday: {
+                        title: "Full Body Strength",
+                        intensity: "hard",
+                        duration: "40 min",
+                        exercises: [
+                            {name: "Squat to Press", sets: 4, reps: 10, weight: "8kg", rest: 75, muscle: "full body"},
+                            {name: "Dumbbell Clean & Press", sets: 3, reps: 8, weight: "8kg", rest: 75, muscle: "full body"},
+                            {name: "Man Makers", sets: 3, reps: 6, weight: "6kg", rest: 90, muscle: "full body"},
+                            {name: "Dumbbell Swings", sets: 4, reps: 20, weight: "10kg (hold one)", rest: 60, muscle: "full body"},
+                            {name: "Burpee with Press", sets: 3, reps: 8, weight: "4kg", rest: 75, muscle: "full body"},
+                            {name: "Russian Twists", sets: 3, reps: 30, weight: "6kg", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    thursday: {
+                        title: "Upper Hypertrophy",
+                        intensity: "medium",
+                        duration: "35 min",
+                        exercises: [
+                            {name: "Incline Dumbbell Press", sets: 4, reps: 12, weight: "6kg", rest: 60, muscle: "chest"},
+                            {name: "Wide-grip Rows", sets: 4, reps: 12, weight: "8kg", rest: 60, muscle: "back"},
+                            {name: "Arnold Press", sets: 3, reps: 10, weight: "6kg", rest: 60, muscle: "shoulders"},
+                            {name: "Tricep Extensions", sets: 3, reps: 15, weight: "6kg", rest: 45, muscle: "triceps"},
+                            {name: "21s Bicep Curls", sets: 2, reps: 21, weight: "4kg", rest: 60, muscle: "biceps"},
+                            {name: "Plank to Push-up", sets: 3, reps: 10, weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    friday: {
+                        title: "Lower Hypertrophy",
+                        intensity: "medium",
+                        duration: "35 min",
+                        exercises: [
+                            {name: "Front Squats", sets: 4, reps: 12, weight: "8kg", rest: 60, muscle: "legs"},
+                            {name: "Romanian Deadlifts", sets: 4, reps: 12, weight: "10kg", rest: 60, muscle: "hamstrings"},
+                            {name: "Reverse Lunges", sets: 3, reps: "12 each leg", weight: "8kg", rest: 60, muscle: "legs"},
+                            {name: "Sumo Squats", sets: 3, reps: 15, weight: "10kg (hold one)", rest: 45, muscle: "legs"},
+                            {name: "Single-leg Glute Bridges", sets: 3, reps: "15 each", weight: "6kg", rest: 45, muscle: "glutes"},
+                            {name: "Bicycle Crunches", sets: 3, reps: "25 each side", weight: "Bodyweight", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    saturday: {
+                        title: "Conditioning",
+                        intensity: "hard",
+                        duration: "25 min",
+                        exercises: [
+                            {name: "Dumbbell Complexes", sets: 4, reps: "30 sec work", weight: "6kg", rest: 60, muscle: "full body"},
+                            {name: "Mountain Climbers", sets: 3, reps: "45 sec", weight: "Bodyweight", rest: 45, muscle: "cardio"},
+                            {name: "Burpees", sets: 3, reps: 12, weight: "Bodyweight", rest: 60, muscle: "cardio"},
+                            {name: "High Knees", sets: 3, reps: "30 sec", weight: "Bodyweight", rest: 30, muscle: "cardio"},
+                            {name: "Plank Hold", sets: 3, reps: "60 sec", weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    sunday: { title: "Rest Day", type: "rest" }
+                }
+            },
+            4: {
+                title: "Week 4 - Peak Performance",
+                description: "Maximum intensity and complex movements",
+                workouts: {
+                    monday: {
+                        title: "Upper Strength",
+                        intensity: "hard",
+                        duration: "40 min",
+                        exercises: [
+                            {name: "Heavy Chest Press", sets: 5, reps: 6, weight: "10kg (5+5)", rest: 90, muscle: "chest"},
+                            {name: "Heavy Rows", sets: 5, reps: 6, weight: "10kg", rest: 90, muscle: "back"},
+                            {name: "Handstand Push-ups", sets: 3, reps: 5, weight: "Bodyweight", rest: 75, muscle: "shoulders"},
+                            {name: "Close-grip Push-ups", sets: 3, reps: 10, weight: "Bodyweight", rest: 60, muscle: "triceps"},
+                            {name: "Concentration Curls", sets: 3, reps: 10, weight: "8kg", rest: 60, muscle: "biceps"},
+                            {name: "Weighted Planks", sets: 3, reps: "45 sec", weight: "6kg", rest: 60, muscle: "core"}
+                        ]
+                    },
+                    tuesday: {
+                        title: "Lower Strength", 
+                        intensity: "hard",
+                        duration: "40 min",
+                        exercises: [
+                            {name: "Heavy Goblet Squats", sets: 5, reps: 6, weight: "10kg (hold one)", rest: 90, muscle: "legs"},
+                            {name: "Heavy Deadlifts", sets: 5, reps: 6, weight: "10kg", rest: 90, muscle: "legs"},
+                            {name: "Pistol Squats", sets: 3, reps: "5 each leg", weight: "Bodyweight", rest: 75, muscle: "legs"},
+                            {name: "Jump Lunges", sets: 3, reps: "12 each leg", weight: "Bodyweight", rest: 60, muscle: "power"},
+                            {name: "Single-leg Deadlifts", sets: 3, reps: "8 each leg", weight: "8kg", rest: 60, muscle: "balance"},
+                            {name: "Hollow Body Hold", sets: 3, reps: "45 sec", weight: "Bodyweight", rest: 60, muscle: "core"}
+                        ]
+                    },
+                    wednesday: {
+                        title: "Full Body Beast",
+                        intensity: "hard", 
+                        duration: "45 min",
+                        exercises: [
+                            {name: "Heavy Squat to Press", sets: 5, reps: 8, weight: "10kg", rest: 90, muscle: "full body"},
+                            {name: "Turkish Get-ups", sets: 3, reps: "5 each side", weight: "8kg", rest: 90, muscle: "full body"},
+                            {name: "Devil's Press", sets: 3, reps: 6, weight: "8kg", rest: 90, muscle: "full body"},
+                            {name: "Heavy Swings", sets: 4, reps: 25, weight: "10kg (hold one)", rest: 75, muscle: "full body"},
+                            {name: "Burpee Complex", sets: 3, reps: 8, weight: "6kg", rest: 90, muscle: "full body"},
+                            {name: "Weighted Sit-ups", sets: 3, reps: 20, weight: "8kg", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    thursday: {
+                        title: "Upper Volume",
+                        intensity: "medium",
+                        duration: "40 min",
+                        exercises: [
+                            {name: "Chest Fly", sets: 4, reps: 15, weight: "6kg", rest: 60, muscle: "chest"},
+                            {name: "Face Pulls", sets: 4, reps: 15, weight: "6kg", rest: 60, muscle: "rear delts"},
+                            {name: "Overhead Press", sets: 4, reps: 12, weight: "8kg", rest: 60, muscle: "shoulders"},
+                            {name: "Skull Crushers", sets: 3, reps: 15, weight: "6kg", rest: 45, muscle: "triceps"},
+                            {name: "Preacher Curls", sets: 3, reps: 15, weight: "6kg", rest: 45, muscle: "biceps"},
+                            {name: "Ab Wheel", sets: 3, reps: 12, weight: "Bodyweight", rest: 45, muscle: "core"}
+                        ]
+                    },
+                    friday: {
+                        title: "Lower Volume",
+                        intensity: "medium",
+                        duration: "40 min",
+                        exercises: [
+                            {name: "Pause Squats", sets: 4, reps: 12, weight: "8kg", rest: 60, muscle: "legs"},
+                            {name: "Stiff-leg Deadlifts", sets: 4, reps: 12, weight: "10kg", rest: 60, muscle: "hamstrings"},
+                            {name: "Curtsy Lunges", sets: 3, reps: "12 each leg", weight: "6kg", rest: 60, muscle: "legs"},
+                            {name: "Goblet Squats", sets: 3, reps: 20, weight: "8kg", rest: 45, muscle: "legs"},
+                            {name: "Hip Thrusts", sets: 3, reps: 20, weight: "10kg", rest: 45, muscle: "glutes"},
+                            {name: "Russian Twists", sets: 3, reps: 40, weight: "8kg", rest: 30, muscle: "core"}
+                        ]
+                    },
+                    saturday: {
+                        title: "Final Challenge",
+                        intensity: "hard",
+                        duration: "30 min",
+                        exercises: [
+                            {name: "100 Push-ups", sets: 1, reps: 100, weight: "Bodyweight", rest: 120, muscle: "challenge"},
+                            {name: "100 Squats", sets: 1, reps: 100, weight: "Bodyweight", rest: 120, muscle: "challenge"},
+                            {name: "5 min Plank", sets: 1, reps: "5 min", weight: "Bodyweight", rest: 120, muscle: "challenge"},
+                            {name: "50 Burpees", sets: 1, reps: 50, weight: "Bodyweight", rest: 120, muscle: "challenge"}
+                        ]
+                    },
+                    sunday: { title: "Celebration Rest", type: "rest" }
+                }
+            }
+        };
+
+        // App state
+        let currentWeek = 1;
+        let currentWorkout = null;
+        let currentExerciseIndex = 0;
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+
+        // Initialize app
+        function initApp() {
+            selectWeek(1);
+            updateProgress();
+            loadTracking();
+        }
+
+        // Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Week selection
+        function selectWeek(weekNum) {
+            currentWeek = weekNum;
+            document.querySelectorAll('.week-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('weekTitle').textContent = workoutProgram[weekNum].title;
+            updateWeekDisplay();
+            updateDashboardStats();
+        }
+
+        function updateWeekDisplay() {
+            const weekData = workoutProgram[currentWeek];
+            const weekWorkouts = document.getElementById('weekWorkouts');
+            weekWorkouts.innerHTML = '';
+
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            
+            days.forEach(day => {
+                const workout = weekData.workouts[day];
+                const card = document.createElement('div');
+                card.className = workout.type === 'rest' ? 'workout-card rest-day' : 'workout-card';
+                
+                if (workout.type === 'rest') {
+                    card.innerHTML = `
+                        <div class="day-title">${day.charAt(0).toUpperCase() + day.slice(1)} - ${workout.title}</div>
+                        <p style="color: #48bb78;">Complete rest and recovery day 🌿</p>
+                    `;
+                } else {
+                    const intensity = workout.intensity || 'medium';
+                    const intensityClass = intensity === 'easy' ? '' : intensity === 'medium' ? 'intensity-medium' : 'intensity-hard';
+                    
+                    card.innerHTML = `
+                        <div class="day-title">
+                            ${day.charAt(0).toUpperCase() + day.slice(1)} - ${workout.title}
+                            <span class="intensity-badge ${intensityClass}">${intensity.toUpperCase()}</span>
+                        </div>
+                        <p style="color: #718096; margin-bottom: 10px;">${workout.duration} • ${workout.exercises.length} exercises</p>
+                        <button class="complete-btn" onclick="startWorkout('${day}')">Start Workout</button>
+                    `;
+                }
+                
+                weekWorkouts.appendChild(card);
+            });
+        }
+
+        // Workout functions
+        function startWorkout(day) {
+            currentWorkout = workoutProgram[currentWeek].workouts[day];
+            currentExerciseIndex = 0;
+            showPage('workout');
+            document.querySelector('.nav-btn[onclick="showPage(\'workout\')"]').classList.add('active');
+            updateWorkoutDisplay();
+        }
+
+        function updateWorkoutDisplay() {
+            if (!currentWorkout || !currentWorkout.exercises) return;
+
+            document.getElementById('workoutTitle').textContent = currentWorkout.title;
+            
+            const totalExercises = currentWorkout.exercises.length;
+            const progress = ((currentExerciseIndex) / totalExercises) * 100;
+            document.getElementById('workoutProgress').style.width = progress + '%';
+            document.getElementById('exerciseCounter').textContent = `Exercise ${currentExerciseIndex + 1} of ${totalExercises}`;
+
+            if (currentExerciseIndex < totalExercises) {
+                const exercise = currentWorkout.exercises[currentExerciseIndex];
+                document.getElementById('currentExercise').style.display = 'flex';
+                document.getElementById('exerciseName').textContent = exercise.name;
+                document.getElementById('exerciseDetails').textContent = `${exercise.sets} sets × ${exercise.reps} reps`;
+                document.getElementById('weightCalc').textContent = `Weight: ${exercise.weight} | Rest: ${exercise.rest}s | Target: ${exercise.muscle}`;
+                document.getElementById('exerciseImage').textContent = exercise.muscle.toUpperCase().slice(0, 3);
+                
+                // Set timer to exercise rest time
+                timerSeconds = exercise.rest;
+                updateTimerDisplay();
+            }
+        }
+
+        function nextExercise() {
+            if (currentWorkout && currentExerciseIndex < currentWorkout.exercises.length - 1) {
+                currentExerciseIndex++;
+                updateWorkoutDisplay();
+            }
+        }
+
+        function previousExercise() {
+            if (currentExerciseIndex > 0) {
+                currentExerciseIndex--;
+                updateWorkoutDisplay();
+            }
+        }
+
+        function completeExercise() {
+            if (currentWorkout && currentExerciseIndex < currentWorkout.exercises.length - 1) {
+                nextExercise();
+            } else {
+                // Workout completed
+                completeWorkout();
+            }
+        }
+
+        function completeWorkout() {
+            if (!currentWorkout) return;
+            
+            // Save progress
+            const completedWorkouts = getCompletedWorkouts();
+            const workoutKey = `week${currentWeek}_${Object.keys(workoutProgram[currentWeek].workouts).find(key => 
+                workoutProgram[currentWeek].workouts[key] === currentWorkout)}`;
+            
+            if (!completedWorkouts.includes(workoutKey)) {
+                completedWorkouts.push(workoutKey);
+                localStorage.setItem('completedWorkouts', JSON.stringify(completedWorkouts));
+            }
+            
+            // Save workout date
+            const today = new Date().toDateString();
+            const workoutDates = JSON.parse(localStorage.getItem('workoutDates') || '[]');
+            if (!workoutDates.includes(today)) {
+                workoutDates.push(today);
+                localStorage.setItem('workoutDates', JSON.stringify(workoutDates));
+            }
+            
+            alert('🎉 Workout completed! Great job, Benny!');
+            showPage('dashboard');
+            updateDashboardStats();
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (isTimerRunning) {
+                pauseTimer();
+            } else {
+                isTimerRunning = true;
+                document.getElementById('timerBtn').textContent = 'Pause';
+                
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        finishTimer();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('timerBtn').textContent = 'Start Rest';
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            if (currentWorkout && currentExerciseIndex < currentWorkout.exercises.length) {
+                timerSeconds = currentWorkout.exercises[currentExerciseIndex].rest;
+            } else {
+                timerSeconds = 60;
+            }
+            updateTimerDisplay();
+        }
+
+        function finishTimer() {
+            pauseTimer();
+            // Notification
+            try {
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+            } catch (e) {}
+            alert('⏰ Rest time finished! Ready for next exercise?');
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Weight tracking
+        function saveWeight() {
+            const weight = document.getElementById('weightInput').value;
+            if (weight) {
+                const weights = JSON.parse(localStorage.getItem('weights') || '[]');
+                const today = new Date().toDateString();
+                
+                // Remove existing entry for today
+                const filtered = weights.filter(w => w.date !== today);
+                filtered.push({ date: today, weight: parseFloat(weight) });
+                
+                localStorage.setItem('weights', JSON.stringify(filtered));
+                document.getElementById('weightInput').value = '';
+                updateWeightHistory();
+                alert('⚖️ Weight saved!');
+            }
+        }
+
+        // Progress functions
+        function getCompletedWorkouts() {
+            const saved = localStorage.getItem('completedWorkouts');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function updateDashboardStats() {
+            const completedWorkouts = getCompletedWorkouts();
+            const weekWorkouts = completedWorkouts.filter(w => w.startsWith(`week${currentWeek}_`));
+            
+            document.getElementById('workoutsCompleted').textContent = weekWorkouts.length;
+            document.getElementById('totalWorkouts').textContent = completedWorkouts.length;
+        }
+
+        function updateProgress() {
+            const completedWorkouts = getCompletedWorkouts();
+            const workoutDates = JSON.parse(localStorage.getItem('workoutDates') || '[]');
+            
+            document.getElementById('totalWorkoutsCompleted').textContent = completedWorkouts.length;
+            
+            // Calculate streak
+            let streak = 0;
+            const today = new Date();
+            let currentDate = new Date(today);
+            
+            while (workoutDates.includes(currentDate.toDateString())) {
+                streak++;
+                currentDate.setDate(currentDate.getDate() - 1);
+            }
+            
+            document.getElementById('currentStreak').textContent = streak;
+            
+            // Weekly progress
+            const weeklyHtml = Object.keys(workoutProgram).map(week => {
+                const weekWorkouts = completedWorkouts.filter(w => w.startsWith(`week${week}_`));
+                return `<p>Week ${week}: ${weekWorkouts.length}/6 workouts completed</p>`;
+            }).join('');
+            
+            document.getElementById('weeklyProgress').innerHTML = weeklyHtml || '<p>Start your fitness journey!</p>';
+        }
+
+        function loadTracking() {
+            updateWeightHistory();
+        }
+
+        function updateWeightHistory() {
+            const weights = JSON.parse(localStorage.getItem('weights') || '[]');
+            const historyDiv = document.getElementById('weightHistory');
+            
+            if (weights.length === 0) {
+                historyDiv.innerHTML = '<p>Start tracking your weight to see progress!</p>';
+                return;
+            }
+            
+            const recent = weights.slice(-10).reverse();
+            const historyHtml = recent.map(w => 
+                `<p>${w.date}: ${w.weight} kg</p>`
+            ).join('');
+            
+            historyDiv.innerHTML = historyHtml;
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('completedWorkouts');
+                localStorage.removeItem('workoutDates');
+                localStorage.removeItem('weights');
+                updateDashboardStats();
+                updateProgress();
+                loadTracking();
+                alert('All progress has been reset.');
+            }
+        }
+
+        // Initialize app when page loads
+        window.onload = initApp;
+        
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
